@@ -1,7 +1,3 @@
-<!-- Practice questions for March 18th -->
-<!-- Written by: Rodney Stead -->
-<!-- Note: I know the error and success were not needed, but wanted to do for practice. -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,60 +47,71 @@
     </style>
 </head>
 <body>
+    <!-- Button to trigger the Bitcoin value fetch -->
     <button class = "button" onclick = "getCurrentValue()">
         Click for current value
     </button>
+    <!-- Paragraph to display the fetched Bitcoin value -->
     <p id = "bitcoinValue"></p>
     <script>
-        function updateValues(newValue) {
-    document.getElementById('bitcoinValue').innerText = "Current Bitcoin value: " + newValue;
+    // Function to update the displayed Bitcoin value and show a success message
+    function updateValues(newValue) {
+        // Update the displayed Bitcoin value
+        document.getElementById('bitcoinValue').innerText = "Current Bitcoin value: " + newValue;
 
-    var successElement = document.createElement('div');
-    successElement.id = 'success';
-    successElement.innerText = "The value has been updated successfully!";
-    document.body.appendChild(successElement);
+        // Create and display a success message
+        var successElement = document.createElement('div');
+        successElement.id = 'success';
+        successElement.innerText = "The value has been updated successfully!";
+        document.body.appendChild(successElement);
 
-    // Clears the success message
-    setTimeout(function() {
-        successElement.remove();
-    }, 5000);
-
-    // Updates the Bitcoin value every minute
-    setTimeout(getCurrentValue, 60000);
-}
-
-function getCurrentValue () {
-    var xhr = new XMLHttpRequest();
-    var url = "https://blockchain.info/q/24hrprice";
-    var errorElement = null;
-    
-    xhr.onload = function () {
-        var response = this.responseText;
-        var currentValue = `${response} (USD)`; 
-        updateValues(currentValue);
-    };
-    
-    xhr.onerror = function() {
-        errorElement = document.createElement('div');
-        errorElement.id = 'error';
-        errorElement.innerText = "Error fetching data.";
-        document.body.appendChild(errorElement);
-
-        // Clears the error message
+        // Clear the success message after 5 seconds
         setTimeout(function() {
-            if (errorElement) {
-                errorElement.remove();
-            }
+            successElement.remove();
         }, 5000);
-    };
 
-    xhr.open ("GET", url);
-    xhr.send();
-}
+        // Fetch the Bitcoin value again after 1 minute
+        setTimeout(getCurrentValue, 60000);
+    }
 
-window.onload = function() {
-    getCurrentValue();
-}
+    // Function to fetch the current Bitcoin value
+    function getCurrentValue () {
+        // Create a new XMLHttpRequest to fetch the data
+        var xhr = new XMLHttpRequest();
+        var url = "https://blockchain.info/q/24hrprice";
+        var errorElement = null;
+        
+        // When the request loads, update the displayed Bitcoin value
+        xhr.onload = function () {
+            var response = this.responseText;
+            var currentValue = `${response} (USD)`; 
+            updateValues(currentValue);
+        };
+        
+        // If there's an error with the request, display an error message
+        xhr.onerror = function() {
+            errorElement = document.createElement('div');
+            errorElement.id = 'error';
+            errorElement.innerText = "Error fetching data.";
+            document.body.appendChild(errorElement);
+
+            // Clear the error message after 5 seconds
+            setTimeout(function() {
+                if (errorElement) {
+                    errorElement.remove();
+                }
+            }, 5000);
+        };
+
+        // Open and send the request
+        xhr.open ("GET", url);
+        xhr.send();
+    }
+
+    // When the window loads, fetch the current Bitcoin value
+    window.onload = function() {
+        getCurrentValue();
+    }
     </script>
 </body>
 </html>
